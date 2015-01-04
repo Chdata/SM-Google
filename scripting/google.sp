@@ -1,7 +1,7 @@
 #pragma semicolon 1
 #include <sourcemod>
 
-#define PLUGIN_VERSION  "0x02"
+#define PLUGIN_VERSION  "0x03"
 
 public Plugin:myinfo = {
     name = "Google Search Command",
@@ -51,22 +51,24 @@ public Action:cdLmgtfy(iClient, iArgc)
         return Plugin_Handled;
     }
 
-    decl String:szCmd[256];
-    GetCmdArgString(szCmd, sizeof(szCmd));
+    decl String:szName[32];
+    GetCmdArg(1, szName, sizeof(szName));
 
-    decl String:szExplode[2][256];
-    ExplodeString(szCmd, " ", szExplode, sizeof(szExplode), sizeof(szExplode[]), true);
-
-    new iTarget = FindTarget(iClient, szExplode[0], true, false);
+    new iTarget = FindTarget(iClient, szName, true, false);
 
     if (iTarget <= 0)
     {
-        ReplyToCommand(iClient, "[SM] Could not find player \"%s\"", szExplode[0]);
+        ReplyToCommand(iClient, "[SM] Could not find player \"%s\"", szName);
         return Plugin_Handled;
     }
 
+    decl String:szSearch[256];
+    GetCmdArgString(szSearch, sizeof(szSearch));
+
+    new iExtra = szSearch[strlen(szName)+1] == '"' ? 2 : 1;
+
     decl String:szLink[512];
-    Format(szLink, sizeof(szLink), "http://lmgtfy.com/?q=%s", szExplode[1]);
+    Format(szLink, sizeof(szLink), "http://lmgtfy.com/?q=%s", szSearch[strlen(szName)+iExtra]);
 
     ShowMOTDPanel(iTarget, "LMGTFY", szLink, MOTDPANEL_TYPE_URL);
     return Plugin_Handled;
