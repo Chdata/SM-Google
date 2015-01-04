@@ -32,12 +32,9 @@ public Action:cdGoogle(iClient, iArgc)
         return Plugin_Handled;
     }
 
-    decl String:szSearch[256], String:szLink[512];
-    
-    GetCmdArgString(szSearch, sizeof(szSearch));
-
-    Format(szLink, sizeof(szLink), "https://www.google.com/search?q=%s", szSearch);
-
+    decl String:szLink[512];
+    GetCmdArgString(szLink, sizeof(szLink));
+    Format(szLink, sizeof(szLink), "https://www.google.com/search?q=%s", szLink);
     ShowMOTDPanel(iClient, "Google Search", szLink, MOTDPANEL_TYPE_URL);
 
     return Plugin_Handled;
@@ -62,14 +59,10 @@ public Action:cdLmgtfy(iClient, iArgc)
         return Plugin_Handled;
     }
 
-    decl String:szSearch[256];
-    GetCmdArgString(szSearch, sizeof(szSearch));
-
-    new iExtra = szSearch[strlen(szName)+1] == '"' ? 2 : 1;
-
     decl String:szLink[512];
-    Format(szLink, sizeof(szLink), "http://lmgtfy.com/?q=%s", szSearch[strlen(szName)+iExtra]);
-
+    GetCmdArgString(szLink, sizeof(szLink));
+    new iExtra = szLink[strlen(szName)+1] == '"' ? 2 : 1;
+    Format(szLink, sizeof(szLink), "http://lmgtfy.com/?q=%s", szLink[strlen(szName)+iExtra]);
     ShowMOTDPanel(iTarget, "LMGTFY", szLink, MOTDPANEL_TYPE_URL);
     return Plugin_Handled;
 }
